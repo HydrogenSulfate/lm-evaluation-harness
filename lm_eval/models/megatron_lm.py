@@ -811,7 +811,7 @@ class MegatronLMEval(LM):
                 position_ids = position_ids.unsqueeze(0).expand(batch_size, -1)
             attention_mask = causal_mask
 
-        with torch.no_grad():
+        with torch.inference_mode():
             output = self.model(
                 input_ids=input_ids,
                 position_ids=position_ids,

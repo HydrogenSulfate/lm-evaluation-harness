@@ -85,7 +85,7 @@ class Mistral3LM(HFLM):
         assertion that checks for AutoModelForCausalLM.
         """
         with (
-            torch.no_grad(),
+            torch.inference_mode(),
             torch.autocast(
                 device_type=self.device.type,
                 dtype=self.mixed_precision_dtype,

@@ -962,7 +962,7 @@ class HFLM(TemplateLM):
         logits returned from the model's decoder
         """
         with (
-            torch.no_grad(),
+            torch.inference_mode(),
             torch.autocast(
                 device_type=self.device.type,
                 dtype=self.mixed_precision_dtype,
