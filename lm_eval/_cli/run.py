@@ -462,6 +462,11 @@ class Run(SubCommand):
                 f"limit: {cfg.limit}, num_fewshot: {cfg.num_fewshot}, "
                 f"batch_size: {cfg.batch_size}{f' ({batch_sizes})' if batch_sizes else ''}"
             )
+            if cfg.tasks:
+                task_list = (
+                    cfg.tasks if isinstance(cfg.tasks, list) else cfg.tasks.split(",")
+                )
+                results["task_order"] = [t.strip() for t in task_list]
             print(make_table(results))
             if "groups" in results:
                 print(make_table(results, "groups"))

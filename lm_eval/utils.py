@@ -472,8 +472,22 @@ def make_table(result_dict, column: str = "results", sort_results: bool = False)
     depth_map, hierarchical_keys = _build_hierarchy_info(
         group_subtasks, set(result_dict[column].keys())
     )
+    task_order = result_dict.get("task_order", None)
 
-    if sort_results:  # noqa: SIM108
+    if task_order is not None and not sort_results:
+        # 按 --tasks 传入顺序排列
+        seen = set()
+        keys = []
+        for k in task_order:
+            if k in result_dict[column] and k not in seen:
+                keys.append(k)
+                seen.add(k)
+        # 追加层级和遗漏的 key
+        for k in hierarchical_keys:
+            if k not in seen:
+                keys.append(k)
+                seen.add(k)
+    elif sort_results:  # noqa: SIM108
         # sort entries alphabetically by task or group name.
         # NOTE: we default here to false, because order matters for multi-level table printing a la mmlu.
         # sorting here would mess that up

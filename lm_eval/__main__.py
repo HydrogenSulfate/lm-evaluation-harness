@@ -7,7 +7,17 @@ def cli_evaluate() -> None:
     setup_logging()
     parser = HarnessCLI()
     args = parser.parse_args()
-    parser.execute(args)
+    try:
+        parser.execute(args)
+    finally:
+        # Clean up distributed process group to avoid resource leak warning
+        import contextlib
+
+        with contextlib.suppress(Exception):
+            import torch.distributed as dist
+
+            if dist.is_initialized():
+                dist.destroy_process_group()
 
 
 if __name__ == "__main__":
